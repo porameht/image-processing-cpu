@@ -142,6 +142,9 @@ The service uses CarveKit with the following optimized settings:
 | API_PORT | API port number | 8000 |
 | TEMP_DIR | Temporary files directory | temp |
 | OUTPUT_DIR | Output files directory | output |
+| CLOUDINARY_CLOUD_NAME | Cloudinary cloud name | - |
+| CLOUDINARY_API_KEY | Cloudinary API key | - |
+| CLOUDINARY_API_SECRET | Cloudinary API secret | - |
 
 ## Development
 

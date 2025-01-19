@@ -1,4 +1,5 @@
 import PIL.Image
+import torch
 
 from carvekit.api.interface import Interface
 from carvekit.ml.wrap.fba_matting import FBAMatting
@@ -19,27 +20,33 @@ class RemoveBackground:
     def __init__(self):
         if not self._is_initialized:
             print("Initializing RemoveBackground model...")
-            self.seg_net = TracerUniversalB7(device='cpu',
-                  batch_size=1)
 
-            self.fba = FBAMatting(device='cpu',
-                     input_tensor_size=2048,
-                     batch_size=1)
+            # Initialize models
+            self.seg_net = TracerUniversalB7(
+                device='cpu',
+                batch_size=1
+            )
+
+            self.fba = FBAMatting(
+                device='cpu',
+                input_tensor_size=2048,
+                batch_size=1
+            )
 
             self.trimap = TrimapGenerator()
-
             self.pre_processing = PreprocessingStub()
+            self.post_processing = MattingMethod(
+                matting_module=self.fba,
+                trimap_generator=self.trimap,
+                device='cpu'
+            )
+
+            self.interface = Interface(
+                pre_pipe=self.pre_processing,
+                post_pipe=self.post_processing,
+                seg_pipe=self.seg_net
+            )
             
-            print(self.pre_processing, "pre_processing")
-
-            self.post_processing = MattingMethod(matting_module=self.fba,
-                           trimap_generator=self.trimap,
-                           device='cpu')
-
-            print(self.post_processing, "post_processing")
-            self.interface = Interface(pre_pipe=self.pre_processing,
-                          post_pipe=self.post_processing,
-                          seg_pipe=self.seg_net)
             self._is_initialized = True
             print("Model initialization complete!")
 
