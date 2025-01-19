@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import shutil
+from pathlib import Path
+from carvekit.ml.files.models_loc import tracer_b7_pretrained
+from carvekit.web.schemas.config import MLConfig
+from carvekit.web.utils.init_utils import init_interface
+
+MODEL_CACHE = "model-cache"
+CARVEKIT_CACHE = "/root/.cache/carvekit/checkpoints"
+
+def setup_model_cache():
+    os.makedirs(MODEL_CACHE, exist_ok=True)
+    os.makedirs(f"{CARVEKIT_CACHE}/tracer_b7", exist_ok=True)
+    os.makedirs(f"{CARVEKIT_CACHE}/fba", exist_ok=True)
+
+    tracer_b7_pretrained()
+    
+    model = init_interface(
+        MLConfig(
+            segmentation_network="tracer_b7",
+            preprocessing_method="none",
+            postprocessing_method="fba",
+            seg_mask_size=640,
+            trimap_dilation=30,
+            trimap_erosion=5,
+            device='cpu'
+        )
+    )
+
+    shutil.copy2(
+        f"{CARVEKIT_CACHE}/tracer_b7/tracer_b7.pth",
+        f"{MODEL_CACHE}/tracer_b7.pth"
+    )
+    shutil.copy2(
+        f"{CARVEKIT_CACHE}/fba/fba_matting.pth",
+        f"{MODEL_CACHE}/fba_matting.pth"
+    )
+
+if __name__ == "__main__":
+    setup_model_cache()
