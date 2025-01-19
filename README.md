@@ -1,6 +1,6 @@
 # Background Remover API
 
-FastAPI service for inferencing deep learning models for removing image backgrounds based on CPU and low-memory devices.
+🐍 A FastAPI service that removes backgrounds from images using deep learning models, optimized for CPU and low-memory environments.
 
 ## Features
 - High-quality background removal using CarveKit
