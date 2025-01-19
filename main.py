@@ -12,7 +12,7 @@ def create_app() -> FastAPI:
         allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["POST", "GET"],
-        allow_headers=["multipart/form-data"],
+        allow_headers=["multipart/form-data", "Content-Type", "Accept", "Authorization"],
     )
     
     app.include_router(router)
@@ -21,5 +21,5 @@ def create_app() -> FastAPI:
 
 app = create_app()
 
-if __name__ == "__main__":
-    uvicorn.run(app, host=settings.API_HOST, port=settings.API_PORT)
+# if __name__ == "__main__":
+#     uvicorn.run(app, host=settings.API_HOST, port=settings.API_PORT)
